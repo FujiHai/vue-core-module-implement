@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>发布订阅模式-事件中心方式</title>
+</head>
+
+<body>
+  <script>
+    class EventBus {
+
+      /**
+       * 存储事件 map，{ 'click': [onClick1, onClick2], 'mouseover': [...] }
+      */
+      constructor() {
+        this.eventMap = {}
+      }
+
+      // 注册事件
+      $on(evtName, listener) {
+        this.eventMap[evtName] = this.eventMap[evtName] || []
+        this.eventMap[evtName].push(listener)
+      }
+
+      // 触发事件
+      $emit(evtName) {
+        this.eventMap[evtName].forEach(listener => {
+          listener()
+        });
+      }
+    }
+
+    const eventbus = new EventBus();
+
+    eventbus.$on('click', () => {
+      console.log('click one!')
+    })
+
+    eventbus.$on('click', () => {
+      console.log('click two!')
+    })
+
+    eventbus.$emit('click');
+  </script>
+</body>
+
+</html>

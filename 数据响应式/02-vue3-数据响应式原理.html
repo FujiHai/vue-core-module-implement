@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue3-数据响应式原理</title>
+</head>
+
+<body>
+  <div id="app">
+    hello
+  </div>
+
+  <script>
+    let data = {
+      msg: 'hello',
+      count: 0
+    }
+
+    const updateDom = value => {
+      document.querySelector('#app').textContent = value
+    }
+
+    let vm = new Proxy(data, {
+      get(target, key) {
+        console.log('get: ', key, target[key])
+        return target[key]
+      },
+      set(target, key, newValue) {
+        console.log('set, key: ', key, newValue)
+
+        if (target[key] === newValue) {
+          return
+        }
+
+        target[key] = newValue
+
+        updateDom(target[key])
+      }
+    })
+
+    setTimeout(() => {
+      vm.count = 666
+    }, 2000)
+  </script>
+</body>
+
+</html>
