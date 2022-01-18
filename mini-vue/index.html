@@ -20,15 +20,22 @@
     <input type="text" v-model="count">
   </div>
 
+  <script src="./js/observer.js"></script>
   <script src="./js/vue.js"></script>
+
   <script>
     let vm = new Vue({
       el: '#app',
       data: {
         msg: 'Hello Vue',
-        count: 100
+        count: 100,
+        person: {
+          name: 'zhangshan'
+        }
       }
     })
+
+    vm.msg = { name: 'msg...' }
   </script>
 </body>
 
