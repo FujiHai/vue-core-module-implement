@@ -18,6 +18,8 @@ class Vue {
     this._proxyData(this.$data);
 
     new Observer(this.$data);
+
+    new Compiler(this);
   }
 
   _proxyData(data) {
