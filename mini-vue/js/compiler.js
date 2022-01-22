@@ -44,18 +44,26 @@ class Compiler {
   update(node, key, attrName) {
     let updateFn = this[`${attrName}Updater`];
     if (updateFn) {
-      updateFn(node, this.vm[key]);
+      updateFn.call(this, node, this.vm[key], key);
     }
   }
 
   // v-text 指令处理函数，node 为操作结点, value 为绑定数据
-  textUpdater(node, value) {
+  textUpdater(node, value, key) {
     node.textContent = value;
+
+    new Watcher(this.vm, key, (newValue) => {
+      node.textContent = newValue;
+    });
   }
 
   // v-model 指令处理函数
-  modelUpdater(node, value) {
+  modelUpdater(node, value, key) {
     node.value = value;
+
+    new Watcher(this.vm, key, (newValue) => {
+      node.value = newValue;
+    });
   }
 
   // 编译文本节点，处理差值表达式
@@ -67,6 +75,10 @@ class Compiler {
     if (reg.test(value)) {
       let key = RegExp.$1.trim();
       node.textContent = value.replace(reg, this.vm[key]);
+
+      new Watcher(this.vm, key, (newValue) => {
+        node.textContent = newValue;
+      });
     }
   }
 

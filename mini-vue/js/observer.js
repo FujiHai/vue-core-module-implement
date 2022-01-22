@@ -22,6 +22,8 @@ class Observer {
   // 将 data 中的属性转换成 getter/setter
   defineReactive(obj, key, value) {
     let that = this;
+    // 负责收集依赖，并发送通知
+    let dep = new Dep();
     // value 为对象，将 value 中的属性设置为响应式
     this.walk(value);
 
@@ -29,6 +31,8 @@ class Observer {
       enumerable: true,
       configurable: true,
       get() {
+        // 收集依赖
+        Dep.target && dep.addSub(Dep.target);
         return value;
       },
       set(newValue) {
@@ -41,6 +45,7 @@ class Observer {
         // 属性设置为对象时，也转换成响应式
         that.walk(value);
         // 发送通知
+        dep.notify();
       },
     });
   }
